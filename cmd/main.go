@@ -23,6 +23,9 @@ func main() {
 func Router(r *gin.Engine) {
 
 	r.GET("/ok", func(c *gin.Context) {
+
+		log.WithFields(c.Request.Context(), "ok", "ok")
+
 		response.JsonResponse(c, "ok")
 	})
 	r.GET("/error400", func(c *gin.Context) {
