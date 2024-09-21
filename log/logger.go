@@ -3,6 +3,7 @@ package log
 import (
 	"context"
 	"fmt"
+	"github.com/gin-gonic/gin"
 	"github.com/ory/viper"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
@@ -137,19 +138,41 @@ func NewLogger(config *Config, args ...interface{}) *Logger {
 	return DefaultLogger
 }
 
-// 给logger添加键值对标记，传参必须是偶数个， 2个为一个键值对
-func WithFields(ctx context.Context, args ...interface{}) *Logger {
-	return withFields(ctx, 0, args...)
+func WithFields(c *gin.Context, args ...interface{}) {
+	log := withFields(c.Request.Context(), 0, args...)
+	logCtx := WithContext(c.Request.Context(), log)
+	c.Request = c.Request.WithContext(logCtx)
 }
 
-func WithMap(ctx context.Context, kvMap map[string]interface{}) *Logger {
-	args := make([]interface{}, 0)
-	for k, v := range kvMap {
-		args = append(args, k)
-		args = append(args, v)
-	}
-	return withFields(ctx, 0, args...)
+func Infof(c *gin.Context, template string, args ...interface{}) {
+	GetLogger(c.Request.Context()).Sugar().Infof(template, args...)
 }
+
+func Debugf(c *gin.Context, template string, args ...interface{}) {
+	GetLogger(c.Request.Context()).Sugar().Debugf(template, args...)
+}
+
+func Warnf(c *gin.Context, template string, args ...interface{}) {
+	GetLogger(c.Request.Context()).Sugar().Warnf(template, args...)
+}
+
+func Errorf(c *gin.Context, template string, args ...interface{}) {
+	GetLogger(c.Request.Context()).Sugar().Errorf(template, args...)
+}
+
+//// 给logger添加键值对标记，传参必须是偶数个， 2个为一个键值对
+//func WithFields(c *gin.Context, args ...interface{}) *Logger {
+//	return withFields(c.Request.Context(), 0, args...)
+//}
+//
+//func WithMap(ctx context.Context, kvMap map[string]interface{}) *Logger {
+//	args := make([]interface{}, 0)
+//	for k, v := range kvMap {
+//		args = append(args, k)
+//		args = append(args, v)
+//	}
+//	return withFields(ctx, 0, args...)
+//}
 
 func withFields(ctx context.Context, skip int, args ...interface{}) *Logger {
 	if logCtx, ok := getLoggerCtx(ctx); ok {

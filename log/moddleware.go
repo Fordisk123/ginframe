@@ -2,14 +2,12 @@ package log
 
 import (
 	"github.com/gin-gonic/gin"
+	"github.com/google/uuid"
 )
 
 func LoggerMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		ctx := c.Request.Context()
-		log := WithFields(ctx, "path", c.Request.URL.Path, "method", c.Request.Method)
-		logCtx := WithContext(ctx, log)
-		c.Request = c.Request.WithContext(logCtx)
+		WithFields(c, "requestId", uuid.New().String(), "path", c.Request.URL.Path, "method", c.Request.Method)
 		c.Next()
 	}
 }

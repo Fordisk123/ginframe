@@ -24,7 +24,13 @@ func Router(r *gin.Engine) {
 
 	r.GET("/ok", func(c *gin.Context) {
 
-		log.WithFields(c.Request.Context(), "ok", "ok")
+		log.WithFields(c, "ok", "ok")
+
+		log.Infof(c, "11111")
+
+		log.WithFields(c, "ok2", "ok2")
+
+		log.Infof(c, "2222")
 
 		response.JsonResponse(c, "ok")
 	})
