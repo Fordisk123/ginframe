@@ -32,16 +32,16 @@ func (r RequestError) Error() string {
 
 }
 
-func NewBadRequestError(msg string, err error) *RequestError {
-	return &RequestError{
+func NewBadRequestError(msg string, err error) RequestError {
+	return RequestError{
 		RtnCode:     "000400",
 		RtnMsg:      msg,
 		DetailError: err.Error(),
 	}
 }
 
-func NewInternalServerError(msg string, err error) *RequestError {
-	return &RequestError{
+func NewInternalServerError(msg string, err error) RequestError {
+	return RequestError{
 		RtnCode:     "000500",
 		RtnMsg:      msg,
 		DetailError: err.Error(),

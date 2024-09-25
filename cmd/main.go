@@ -6,8 +6,11 @@ import (
 	"github.com/Fordisk123/ginframe/errors"
 	"github.com/Fordisk123/ginframe/frame"
 	"github.com/Fordisk123/ginframe/log"
+	"github.com/Fordisk123/ginframe/middleware"
+	"github.com/Fordisk123/ginframe/pkg/jwt"
 	"github.com/Fordisk123/ginframe/response"
 	"github.com/gin-gonic/gin"
+	"time"
 )
 
 func main() {
@@ -22,7 +25,7 @@ func main() {
 
 func Router(r *gin.Engine) {
 
-	r.GET("/ok", func(c *gin.Context) {
+	r.Use(middleware.JwtMiddleWare(jwt.NewJwter(jwt.RsaPri, jwt.RsaPub, 24*time.Hour))).GET("/ok", func(c *gin.Context) {
 
 		log.WithFields(c, "ok", "ok")
 

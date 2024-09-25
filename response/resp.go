@@ -19,5 +19,5 @@ func JsonResponse(c *gin.Context, data any) {
 }
 
 func ErrorResponse(c *gin.Context, err errors.RequestError) {
-	c.JSON(http.StatusOK, err)
+	c.AbortWithStatusJSON(http.StatusOK, err)
 }
