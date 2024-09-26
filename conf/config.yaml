@@ -5,6 +5,6 @@ http:
 
 db:
   username: root
-  password: Cda$LjF*9BK8
-  address: 172.26.29.228:3306
-  name: ftest
+  password: 123456
+  address: localhost:3306
+  name: measurement_manager

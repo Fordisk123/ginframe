@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"github.com/Fordisk123/ginframe/conf"
+	"github.com/Fordisk123/ginframe/db"
 	"github.com/Fordisk123/ginframe/errors"
 	"github.com/Fordisk123/ginframe/frame"
 	"github.com/Fordisk123/ginframe/log"
@@ -24,7 +25,7 @@ func main() {
 }
 
 func Router(r *gin.Engine) {
-
+	db.InitDb()
 	r.Use(middleware.JwtMiddleWare(jwt.NewJwter(jwt.RsaPri, jwt.RsaPub, 24*time.Hour))).GET("/ok", func(c *gin.Context) {
 
 		log.WithFields(c, "ok", "ok")
