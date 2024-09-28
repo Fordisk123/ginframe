@@ -35,7 +35,7 @@ func TestS3Download(t *testing.T) {
 		panic(err)
 	}
 
-	load, err := s3.DownLoad(context.Background(), "/public/123.txt")
+	load, err := s3.Download(context.Background(), "/public/123.txt")
 	if err != nil {
 		panic(err)
 	}

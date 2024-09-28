@@ -21,7 +21,12 @@ type S3Client struct {
 	Session    *session.Session `json:"session"`
 }
 
+var defaultRegin = "us-east-1"
+
 func NewS3FileClient(AccessKey, SecretKey, Region, EndPoint string, DisableSsl bool) (*S3Client, error) {
+	if Region == "" {
+		Region = defaultRegin
+	}
 	sess, err := session.NewSession(&aws.Config{
 		Credentials:      credentials.NewStaticCredentials(AccessKey, SecretKey, ""),
 		Endpoint:         aws.String(EndPoint),
