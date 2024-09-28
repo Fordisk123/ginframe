@@ -87,7 +87,7 @@ func (s *S3Client) Upload(ctx context.Context, fileName string, reader io.ReadSe
 	}
 }
 
-func (s *S3Client) DownLoad(ctx context.Context, fileName string) (io.ReadCloser, error) {
+func (s *S3Client) Download(ctx context.Context, fileName string) (io.ReadCloser, error) {
 	select {
 	case <-ctx.Done():
 		return nil, fmt.Errorf("download %s timeout", fileName)
