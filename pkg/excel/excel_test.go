@@ -15,9 +15,9 @@ func init() {
 
 func TestExcel(t *testing.T) {
 	db.InitDb()
-	file, _ := os.Create("./test1.xlsx")
+	file, _ := os.Create("../../testdata/test1.xlsx")
 	defer file.Close()
-	f, _ := os.Open("./test.xlsx")
+	f, _ := os.Open("../../testdata/test1.xlsx")
 	err := RenderExcelStream(f, map[string]string{
 		"user.name":     "1",
 		"user.password": "1",

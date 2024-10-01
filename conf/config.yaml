@@ -5,6 +5,7 @@ http:
 
 db:
   username: root
-  password: 123456
-  address: localhost:3306
-  name: measurement_manager
+  password: 12345678
+  address: 127.0.0.1:3306
+  name: mmp
+  log_level: debug
