@@ -13,14 +13,14 @@ import (
 	"time"
 )
 
-var Db *gorm.DB
+var db *gorm.DB
 
 func GetDb(ctx context.Context) *gorm.DB {
-	return Db.WithContext(ctx)
+	return db.WithContext(ctx)
 }
 
 func InitDb() {
-	Db = openMysqlDB(viper.GetString("db.username"),
+	db = openMysqlDB(viper.GetString("db.username"),
 		viper.GetString("db.password"),
 		viper.GetString("db.address"),
 		viper.GetString("db.name"))
