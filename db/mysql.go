@@ -60,6 +60,8 @@ func openMysqlDB(username, password, addr, name string) *gorm.DB {
 		},
 	)
 
+	df := viper.GetString("db.disable_foreignKey")
+
 	addrs := strings.Split(addr, ":")
 	if len(addrs) != 2 {
 		panic("db-addr format error! eg : 127.0.0.1:3306")
@@ -67,7 +69,7 @@ func openMysqlDB(username, password, addr, name string) *gorm.DB {
 	dsn := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8&parseTime=True&loc=Local", username, password, addrs[0], addrs[1], name)
 	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{
 		Logger:                                   newLogger,
-		DisableForeignKeyConstraintWhenMigrating: true,
+		DisableForeignKeyConstraintWhenMigrating: df,
 	})
 
 	if err != nil {
