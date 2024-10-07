@@ -60,7 +60,7 @@ func openMysqlDB(username, password, addr, name string) *gorm.DB {
 		},
 	)
 
-	df := viper.GetString("db.disable_foreignKey")
+	df := viper.GetBool("db.disable_foreignKey")
 
 	addrs := strings.Split(addr, ":")
 	if len(addrs) != 2 {
