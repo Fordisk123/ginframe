@@ -9,9 +9,9 @@ type ResponseError interface {
 }
 
 type RequestError struct {
-	RtnCode     string `json:"rtnCode"`
-	RtnMsg      string `json:"rtnMsg"`
-	DetailError string `json:"detailError"`
+	RtnCode     string `json:"rtn_code"`
+	RtnMsg      string `json:"rtn_msg"`
+	DetailError string `json:"detail_error"`
 }
 
 func (r RequestError) Error() string {
