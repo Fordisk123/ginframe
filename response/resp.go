@@ -7,8 +7,8 @@ import (
 )
 
 type response struct {
-	RtnCode string
-	Data    interface{}
+	RtnCode string      `json:"rtn_code"`
+	Data    interface{} `json:"data"`
 }
 
 func JsonResponse(c *gin.Context, data any) {
