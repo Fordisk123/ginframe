@@ -19,6 +19,11 @@ var Captcha = func(c *gin.Context, length int) {
 		response.ErrorResponse(c, errors.NewBadRequestError("", err))
 		return
 	}
+	err = session.Save()
+	if err != nil {
+		response.ErrorResponse(c, errors.NewInternalServerError("", err))
+		return
+	}
 	c.Status(http.StatusOK)
 	return
 }
