@@ -4,6 +4,7 @@ go 1.21.1
 
 require (
 	github.com/aws/aws-sdk-go v1.55.5
+	github.com/dchest/captcha v1.0.0
 	github.com/gin-contrib/pprof v1.5.0
 	github.com/gin-contrib/sessions v1.0.1
 	github.com/gin-gonic/gin v1.10.0
