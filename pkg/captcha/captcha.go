@@ -30,7 +30,7 @@ var Captcha = func(c *gin.Context, length int) {
 
 var Verify = func(c *gin.Context, id string) error {
 	gc := sessions.Default(c).Get("captcha")
-	if gc != id {
+	if !captcha.VerifyString(gc.(string), id) {
 		return errors.NewBadRequestError("", fmt.Errorf("captcha is not valid"))
 	}
 	return nil
