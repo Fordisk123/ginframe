@@ -23,12 +23,10 @@ var Captcha = func(c *gin.Context, length int) {
 	return
 }
 
-var Verify = func(c *gin.Context, id string) {
+var Verify = func(c *gin.Context, id string) error {
 	gc := sessions.Default(c).Get("captcha")
 	if gc != id {
-		response.ErrorResponse(c, errors.NewBadRequestError("", fmt.Errorf("captcha is not valid")))
-		return
+		return errors.NewBadRequestError("", fmt.Errorf("captcha is not valid"))
 	}
-	c.Status(http.StatusOK)
-	return
+	return nil
 }
