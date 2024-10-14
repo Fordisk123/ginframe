@@ -10,8 +10,6 @@ import (
 	"github.com/Fordisk123/ginframe/middleware"
 	"github.com/Fordisk123/ginframe/pkg/jwt"
 	"github.com/Fordisk123/ginframe/response"
-	"github.com/gin-contrib/sessions"
-	"github.com/gin-contrib/sessions/cookie"
 	"github.com/gin-gonic/gin"
 	"time"
 )
@@ -23,10 +21,6 @@ func main() {
 	log.NewDefaultLogger("example", "v1.0.0")
 
 	frame.GinServe(Router, true)
-
-	var store = cookie.NewStore([]byte("secret"))
-	r.Use(sessions.Sessions("mysession", store))
-
 }
 
 func Router(r *gin.Engine) {
