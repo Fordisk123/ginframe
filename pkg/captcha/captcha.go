@@ -14,14 +14,14 @@ var Captcha = func(c *gin.Context, length int) {
 	id := captcha.NewLen(length)
 	session := sessions.Default(c)
 	session.Set("captcha", id)
-	err := captcha.WriteImage(c.Writer, id, captcha.StdWidth, captcha.StdHeight)
-	if err != nil {
-		response.ErrorResponse(c, errors.NewBadRequestError("", err))
-		return
-	}
-	err = session.Save()
+	err := session.Save()
 	if err != nil {
 		response.ErrorResponse(c, errors.NewInternalServerError("", err))
+		return
+	}
+	err = captcha.WriteImage(c.Writer, id, captcha.StdWidth, captcha.StdHeight)
+	if err != nil {
+		response.ErrorResponse(c, errors.NewBadRequestError("", err))
 		return
 	}
 	c.Status(http.StatusOK)
