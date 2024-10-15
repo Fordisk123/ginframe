@@ -25,7 +25,7 @@ func GinServe(r Route, block bool, cMiddleware ...gin.HandlerFunc) {
 	// used to p95, p99
 	m.SetDuration([]float64{0.1, 0.3, 0.5, 1, 3, 5, 10})
 
-	router.Use(log.GetGinLogger(), gin.Recovery(), log.LoggerMiddleware(), sessions.Sessions("mysession", gsession.SessionStore))
+	router.Use(log.GetGinLogger(), gin.Recovery(), log.LoggerMiddleware(), sessions.Sessions("mmpsession", gsession.SessionStore))
 	m.Use(router)
 	if cMiddleware != nil && len(cMiddleware) > 0 {
 		router.Use(cMiddleware...)
