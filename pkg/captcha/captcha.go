@@ -34,6 +34,9 @@ var Verify = func(c *gin.Context, id string) error {
 		return errors.NewBadRequestError("", fmt.Errorf("session is not valid"))
 	}
 	gc := session.Get("captcha")
+	if gc == nil {
+		return errors.NewBadRequestError("", fmt.Errorf("captcha is not valid"))
+	}
 	if !captcha.VerifyString(gc.(string), id) {
 		return errors.NewBadRequestError("", fmt.Errorf("captcha is not valid"))
 	}
