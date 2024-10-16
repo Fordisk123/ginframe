@@ -35,3 +35,10 @@ var Verify = func(c *gin.Context, id string) error {
 	}
 	return nil
 }
+
+var Clean = func(c *gin.Context, id string) error {
+	session := sessions.Default(c)
+	session.Delete("captcha")
+	session.Save()
+	return nil
+}
