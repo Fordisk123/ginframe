@@ -33,6 +33,9 @@ func (r RequestError) Error() string {
 }
 
 func NewBadRequestError(msg string, err error) RequestError {
+	if msg == "" {
+		msg = err.Error()
+	}
 	return RequestError{
 		RtnCode:     400,
 		RtnMsg:      msg,
@@ -41,6 +44,9 @@ func NewBadRequestError(msg string, err error) RequestError {
 }
 
 func NewInternalServerError(msg string, err error) RequestError {
+	if msg == "" {
+		msg = err.Error()
+	}
 	return RequestError{
 		RtnCode:     500,
 		RtnMsg:      msg,
