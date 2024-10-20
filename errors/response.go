@@ -9,19 +9,19 @@ type ResponseError interface {
 }
 
 type RequestError struct {
-	RtnCode     string `json:"rtn_code"`
-	RtnMsg      string `json:"rtn_msg"`
+	RtnCode     int    `json:"code"`
+	RtnMsg      string `json:"msg"`
 	DetailError string `json:"detail_error"`
 }
 
 func (r RequestError) Error() string {
 
 	switch r.RtnCode {
-	case "000400":
+	case 400:
 		{
 			return fmt.Sprintf("BadRequest! 错误码:'%s',错误原因：%s, 详细错误:%s", r.RtnCode, r.RtnMsg, r.DetailError)
 		}
-	case "000500":
+	case 500:
 		{
 			return fmt.Sprintf("Internal Server Error! 错误码:'%s',错误原因：%s, 详细错误:%s", r.RtnCode, r.RtnMsg, r.DetailError)
 		}
@@ -34,7 +34,7 @@ func (r RequestError) Error() string {
 
 func NewBadRequestError(msg string, err error) RequestError {
 	return RequestError{
-		RtnCode:     "000400",
+		RtnCode:     400,
 		RtnMsg:      msg,
 		DetailError: err.Error(),
 	}
@@ -42,7 +42,7 @@ func NewBadRequestError(msg string, err error) RequestError {
 
 func NewInternalServerError(msg string, err error) RequestError {
 	return RequestError{
-		RtnCode:     "000500",
+		RtnCode:     500,
 		RtnMsg:      msg,
 		DetailError: err.Error(),
 	}
