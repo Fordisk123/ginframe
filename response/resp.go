@@ -8,13 +8,13 @@ import (
 )
 
 type response struct {
-	RtnCode string      `json:"rtn_code"`
+	RtnCode int         `json:"code"`
 	Data    interface{} `json:"data"`
 }
 
 func JsonResponse(c *gin.Context, data any) {
 	c.JSON(http.StatusOK, response{
-		RtnCode: "000000",
+		RtnCode: 200,
 		Data:    data,
 	})
 }
