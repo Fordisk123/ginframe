@@ -1,6 +1,7 @@
 package middleware
 
 import (
+	"fmt"
 	"github.com/Fordisk123/ginframe/errors"
 	"github.com/Fordisk123/ginframe/pkg/jwt"
 	"github.com/Fordisk123/ginframe/response"
@@ -20,4 +21,16 @@ func JwtMiddleWare(jwter jwt.Jwt) gin.HandlerFunc {
 		}
 		c.Set("tokenData", tokenPayLoad)
 	}
+}
+
+func GetJwtPayLoad(c *gin.Context) (map[string]interface{}, error) {
+	value, exists := c.Get("tokenData")
+	if !exists {
+		return nil, fmt.Errorf("can't find token")
+	}
+	ms, ok := value.(map[string]interface{})
+	if !ok {
+		return nil, fmt.Errorf("%+V token is invalid", value)
+	}
+	return ms, nil
 }
