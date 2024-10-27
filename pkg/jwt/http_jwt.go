@@ -3,6 +3,7 @@ package jwt
 import (
 	"fmt"
 	"net/http"
+	"strings"
 )
 
 const JwtHttpRequestHeaderKey = "Authorization"
@@ -12,6 +13,8 @@ func ValidHttpRequestWithJwt(c *http.Request, jwt Jwt) (map[string]interface{}, 
 	if token == "" {
 		return nil, fmt.Errorf("missing token")
 	}
+	token = strings.TrimLeft(token, "Bearer")
+	token = strings.TrimSpace(token)
 	return jwt.Parse(token)
 }
 
