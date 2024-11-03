@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/ory/viper"
+	"github.com/pkg/errors"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
 	lumberjack "gopkg.in/natefinch/lumberjack.v2"
@@ -51,6 +52,14 @@ type Logger struct {
 	*zap.Logger
 	writer io.Writer
 	config *Config
+}
+
+func (l *Logger) Info(msg string, keysAndValues ...interface{}) {
+	l.Logger.Sugar().Infow(msg, keysAndValues...)
+}
+
+func (l *Logger) Error(err error, msg string, keysAndValues ...interface{}) {
+	l.Logger.Sugar().Errorw(errors.WithMessage(err, msg).Error(), keysAndValues...)
 }
 
 var initDefaultLoggerOnce sync.Once
