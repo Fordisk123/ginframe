@@ -72,16 +72,13 @@ func (s *S3Client) Upload(ctx context.Context, fileName string, reader io.ReadSe
 		_, err := svc.HeadBucket(&s3.HeadBucketInput{
 			Bucket: &bucketName,
 		})
-		if err != nil && strings.Contains(err.Error(), "The specified bucket does not exist") {
+		if err != nil && (strings.Contains(err.Error(), "The specified bucket does not exist")|| strings.Contains(err.Error(), "NotFound") )) {
 			_, err := svc.CreateBucket(&s3.CreateBucketInput{
 				Bucket: &bucketName,
 			})
 			if err != nil {
 				return gerrors.Wrapf(err, "create %s bucket of %s failed", bucketName, fileName)
 			}
-		}
-		if err != nil {
-			return gerrors.Wrapf(err, "get %s bucket of %s failed", bucketName, fileName)
 		}
 		_, err = svc.PutObjectWithContext(ctx, &s3.PutObjectInput{
 			Bucket: aws.String(bucketName),
