@@ -164,5 +164,5 @@ func GetExpr(expr string) string {
 
 // JsonLookUp 获取json对应字段内容
 func JsonLookUp(jsonData, expr string) string {
-	return gjson.Get(jsonData, "BillParam.BillCode").Raw
+	return gjson.Get(jsonData, expr).Raw
 }
