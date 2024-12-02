@@ -6,8 +6,10 @@ import (
 	"github.com/Fordisk123/ginframe/db"
 	"github.com/Fordisk123/ginframe/log"
 	gerrors "github.com/pkg/errors"
+	"github.com/tidwall/gjson"
 	excelize "github.com/xuri/excelize/v2"
 	"io"
+	"regexp"
 	"strings"
 )
 
@@ -147,4 +149,20 @@ func RenderExcelStream(fileTmpStream io.ReadCloser, indexs map[string]string, re
 		fmt.Println(info.Value)
 	}
 	return gerrors.WithStack(excelFile.Write(renderReceiveWriter))
+}
+
+var exprRe = regexp.MustCompile(`BIND\("([^"]+)"\)`)
+
+// GetExpr 查找匹配
+func GetExpr(expr string) string {
+	s := exprRe.FindStringSubmatch(expr)
+	if s == nil || len(s) < 2 {
+		return ""
+	}
+	return s[1]
+}
+
+// JsonLookUp 获取json对应字段内容
+func JsonLookUp(jsonData, expr string) string {
+	return gjson.Get(jsonData, "BillParam.BillCode").Raw
 }
