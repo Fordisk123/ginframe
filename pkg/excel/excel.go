@@ -164,5 +164,13 @@ func GetExpr(expr string) string {
 
 // JsonLookUp 获取json对应字段内容
 func JsonLookUp(jsonData, expr string) string {
-	return gjson.Get(jsonData, expr).Raw
+	raw := gjson.Get(jsonData, expr).Raw
+	if strings.HasPrefix(raw, "\"") {
+		raw = raw[1:]
+	}
+	// 去掉结尾的双引号
+	if strings.HasSuffix(raw, "\"") {
+		raw = raw[:len(raw)-1]
+	}
+	return raw
 }
