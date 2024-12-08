@@ -51,3 +51,17 @@ func TestS3Download(t *testing.T) {
 	load.Close()
 
 }
+
+func TestS3Delete(t *testing.T) {
+
+	s3, err := NewS3FileClient("minio", "4553283@wch", "us-east-1", "118.31.20.93:9000", true)
+	if err != nil {
+		panic(err)
+	}
+
+	err = s3.Delete(context.Background(), "/public/123.txt")
+	if err != nil {
+		panic(err)
+	}
+
+}

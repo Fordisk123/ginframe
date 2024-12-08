@@ -109,3 +109,21 @@ func (s *S3Client) Download(ctx context.Context, fileName string) (io.ReadCloser
 		return object.Body, nil
 	}
 }
+
+func (s *S3Client) Delete(ctx context.Context, fileName string) error {
+	select {
+	case <-ctx.Done():
+		return fmt.Errorf("delete  %s timeout", fileName)
+	default:
+		bucketName, filename := splitBucketNameAndFileName(fileName)
+		svc := s3.New(s.Session)
+		_, err := svc.DeleteObject(&s3.DeleteObjectInput{
+			Bucket: aws.String(bucketName),
+			Key:    aws.String(filename),
+		})
+		if err != nil {
+			return err
+		}
+		return nil
+	}
+}

@@ -17,8 +17,15 @@ type Uploader interface {
 	Upload(ctx context.Context, filename string, reader io.ReadSeekCloser) error
 }
 
+// Deleter 提供上传/覆盖文件功能
+type Deleter interface {
+	// Delete ctx 提供超时控制，filename 为文件上传路径
+	Delete(ctx context.Context, filename string) error
+}
+
 // File 文件具备的两种功能
 type File interface {
 	Downloader
 	Uploader
+	Deleter
 }
