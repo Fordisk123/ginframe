@@ -1,8 +1,11 @@
 module github.com/Fordisk123/ginframe
 
-go 1.21.1
+go 1.21.3
+
+toolchain go1.23.0
 
 require (
+	github.com/OnlyPiglet/fly v0.0.0-20241201050213-bdcb24bde384
 	github.com/aws/aws-sdk-go v1.55.5
 	github.com/dchest/captcha v1.0.0
 	github.com/gin-contrib/cors v1.7.2
