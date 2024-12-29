@@ -168,7 +168,7 @@ func GetExpr(expr string) Expr {
 		}
 		return Expr{
 			Type:  Img,
-			Value: s[1],
+			Value: ss[1],
 		}
 	}
 	return Expr{
