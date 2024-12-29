@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/Fordisk123/ginframe/db"
 	"github.com/Fordisk123/ginframe/log"
+	"github.com/Fordisk123/ginframe/pkg/file"
 	gerrors "github.com/pkg/errors"
 	"github.com/tidwall/gjson"
 	excelize "github.com/xuri/excelize/v2"
@@ -152,25 +153,71 @@ func RenderExcelStream(fileTmpStream io.ReadCloser, indexs map[string]string, re
 }
 
 var exprRe = regexp.MustCompile(`BIND\("([^"]+)"\)`)
+var imageExprRe = regexp.MustCompile(`BINDIMAGE\("([^"]+)"\)`)
 
 // GetExpr 查找匹配
-func GetExpr(expr string) string {
+func GetExpr(expr string) Expr {
 	s := exprRe.FindStringSubmatch(expr)
 	if s == nil || len(s) < 2 {
-		return ""
+		ss := imageExprRe.FindStringSubmatch(expr)
+		if ss == nil || len(ss) < 2 {
+			return Expr{
+				Type:  Unknown,
+				Value: "",
+			}
+		}
+		return Expr{
+			Type:  Img,
+			Value: s[1],
+		}
 	}
-	return s[1]
+	return Expr{
+		Type:  Str,
+		Value: s[1],
+	}
 }
 
 // JsonLookUp 获取json对应字段内容
-func JsonLookUp(jsonData, expr string) string {
-	raw := gjson.Get(jsonData, expr).Raw
-	if strings.HasPrefix(raw, "\"") {
-		raw = raw[1:]
+func JsonLookUp(ctx context.Context, jsonData string, expr Expr, file file.File) (interface{}, error) {
+	switch expr.Type {
+	case Str:
+		raw := gjson.Get(jsonData, expr.Value).Raw
+		if strings.HasPrefix(raw, "\"") {
+			raw = raw[1:]
+		}
+		// 去掉结尾的双引号
+		if strings.HasSuffix(raw, "\"") {
+			raw = raw[:len(raw)-1]
+		}
+		return raw, nil
+	case Img:
+		raw := gjson.Get(jsonData, expr.Value).Raw
+		if strings.HasPrefix(raw, "\"") {
+			raw = raw[1:]
+		}
+		// 去掉结尾的双引号
+		if strings.HasSuffix(raw, "\"") {
+			raw = raw[:len(raw)-1]
+		}
+		download, err := file.Download(ctx, raw)
+		if err != nil {
+			return "", err
+		}
+		return download, nil
+	default:
+		return nil, fmt.Errorf("unsupported type %s", expr.Type)
 	}
-	// 去掉结尾的双引号
-	if strings.HasSuffix(raw, "\"") {
-		raw = raw[:len(raw)-1]
-	}
-	return raw
+}
+
+type ExprType int
+
+const (
+	Unknown ExprType = -1
+	Str     ExprType = iota
+	Img
+)
+
+type Expr struct {
+	Type  ExprType
+	Value string
 }
