@@ -199,8 +199,6 @@ func JsonLookUp(ctx context.Context, jsonData string, expr Expr, file file.File)
 		if strings.HasSuffix(raw, "\"") {
 			raw = raw[:len(raw)-1]
 		}
-		println("=========================")
-		println(raw)
 		download, err := file.Download(ctx, raw)
 		if err != nil {
 			return "", err

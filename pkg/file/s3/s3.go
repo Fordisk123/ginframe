@@ -9,6 +9,7 @@ import (
 	"github.com/aws/aws-sdk-go/service/s3"
 	gerrors "github.com/pkg/errors"
 	"io"
+	"log/slog"
 	"strings"
 )
 
@@ -48,6 +49,7 @@ func NewS3FileClient(AccessKey, SecretKey, Region, EndPoint string, DisableSsl b
 }
 
 func splitBucketNameAndFileName(fullPathFileName string) (string, string) {
+	slog.Default().Info(fmt.Sprintf("fullPathFileName: %s", fullPathFileName))
 	index := strings.Index(fullPathFileName, "/")
 	secondIndex := strings.Index(fullPathFileName[index+1:], "/")
 	return fullPathFileName[1 : secondIndex+1], fullPathFileName[secondIndex+1:]
