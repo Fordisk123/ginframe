@@ -49,6 +49,9 @@ func NewS3FileClient(AccessKey, SecretKey, Region, EndPoint string, DisableSsl b
 }
 
 func splitBucketNameAndFileName(fullPathFileName string) (string, string) {
+	if fullPathFileName == "" {
+		return "", ""
+	}
 	slog.Default().Info(fmt.Sprintf("fullPathFileName: %s", fullPathFileName))
 	index := strings.Index(fullPathFileName, "/")
 	secondIndex := strings.Index(fullPathFileName[index+1:], "/")
