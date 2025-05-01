@@ -155,7 +155,7 @@ func RenderExcelStream(fileTmpStream io.ReadCloser, indexs map[string]string, re
 var exprRe = regexp.MustCompile(`BIND\("([^"]+)"\)`)
 var imageExprRe = regexp.MustCompile(`BINDIMAGE\("([^"]+)"\)`)
 var RecordExprRe = regexp.MustCompile(`BINDData\("([^"]+)"\)`)
-var ExpExprRe = regexp.MustCompile(`BINDExpr\("([^"]+)"\)`)
+var ExpExprRe = regexp.MustCompile(`BINDDataExpr\("([^"]+)"\)`)
 
 // GetExpr 查找匹配
 func GetExpr(expr string) Expr {
