@@ -154,6 +154,7 @@ func RenderExcelStream(fileTmpStream io.ReadCloser, indexs map[string]string, re
 
 var exprRe = regexp.MustCompile(`BIND\("([^"]+)"\)`)
 var imageExprRe = regexp.MustCompile(`BINDIMAGE\("([^"]+)"\)`)
+var RecordExprRe = regexp.MustCompile(`BINDDATA\("([^"]+)"\)`)
 
 // GetExpr 查找匹配
 func GetExpr(expr string) Expr {
@@ -161,9 +162,16 @@ func GetExpr(expr string) Expr {
 	if s == nil || len(s) < 2 {
 		ss := imageExprRe.FindStringSubmatch(expr)
 		if ss == nil || len(ss) < 2 {
+			sss := RecordExprRe.FindStringSubmatch(expr)
+			if sss == nil || len(sss) < 2 {
+				return Expr{
+					Type:  Unknown,
+					Value: "",
+				}
+			}
 			return Expr{
-				Type:  Unknown,
-				Value: "",
+				Type:  Record,
+				Value: sss[1],
 			}
 		}
 		return Expr{
@@ -215,6 +223,7 @@ const (
 	Unknown ExprType = -1
 	Str     ExprType = iota
 	Img
+	Record
 )
 
 type Expr struct {
