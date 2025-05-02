@@ -156,6 +156,7 @@ var exprRe = regexp.MustCompile(`BIND\("([^"]+)"\)`)
 var imageExprRe = regexp.MustCompile(`BINDIMAGE\("([^"]+)"\)`)
 var RecordExprRe = regexp.MustCompile(`BINDData\("([^"]+)"\)`)
 var ExpExprRe = regexp.MustCompile(`BINDDataExpr\("([^"]+)"\)`)
+var ComExpExprRe = regexp.MustCompile(`BINDDataComExpr\("([^"]+)","([^"]+)"\)`)
 
 // GetExpr 查找匹配
 func GetExpr(expr string) Expr {
@@ -167,10 +168,24 @@ func GetExpr(expr string) Expr {
 			if sss == nil || len(sss) < 2 {
 				ssss := ExpExprRe.FindStringSubmatch(expr)
 				if ssss == nil || len(ssss) < 2 {
-					return Expr{
-						Type:  Unknown,
-						Value: "",
+
+					info := ExtractFunctionInfo(expr)
+					if info == nil {
+						return Expr{
+							Type:  Unknown,
+							Value: "",
+						}
 					}
+
+					switch info.Name {
+					case "BINDCollectValuesExpr":
+						return Expr{
+							Type:  ComExp,
+							Value: info.Params[0],
+							Args:  info.Params[1:],
+						}
+					}
+
 				}
 				return Expr{
 					Type:  Exp,
@@ -221,7 +236,7 @@ func JsonLookUp(ctx context.Context, jsonData string, expr Expr, file file.File)
 		}
 		return download, nil
 	default:
-		return nil, fmt.Errorf("unsupported type %s", expr.Type)
+		return nil, fmt.Errorf("unsupported type %v", expr.Type)
 	}
 }
 
@@ -233,9 +248,11 @@ const (
 	Img
 	Record
 	Exp
+	ComExp
 )
 
 type Expr struct {
 	Type  ExprType
 	Value string
+	Args  []string
 }
