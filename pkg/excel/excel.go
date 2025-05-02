@@ -181,18 +181,18 @@ func GetExpr(expr string) Expr {
 			Value: info.Params[0]}
 	case string(BindDataExpr):
 		return Expr{
-			Type:  Record,
+			Type:  DataExpr,
 			Value: info.Params[0],
 		}
 	case string(BindExpr):
 		return Expr{
-			Type:  Exp,
+			Type:  ExprExpr,
 			Value: info.Params[0],
 			Args:  info.Params[1:],
 		}
 	case string(BINDCollectValuesExpr):
 		return Expr{
-			Type:  CollectDataExp,
+			Type:  CollectValuesDataExpr,
 			Value: info.Params[0],
 			Args:  info.Params[1:],
 		}
@@ -243,9 +243,9 @@ const (
 	Unknown ExprType = -1
 	Str     ExprType = iota
 	Img
-	Record
-	Exp
-	CollectDataExp
+	DataExpr
+	ExprExpr
+	CollectValuesDataExpr
 )
 
 type Expr struct {
