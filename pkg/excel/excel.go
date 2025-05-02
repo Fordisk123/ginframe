@@ -184,6 +184,12 @@ func GetExpr(expr string) Expr {
 							Value: info.Params[0],
 							Args:  info.Params[1:],
 						}
+					case "BINDExpr":
+						return Expr{
+							Type:  BindExpr,
+							Value: info.Params[0],
+							Args:  info.Params[1:],
+						}
 					}
 
 				}
@@ -249,6 +255,7 @@ const (
 	Record
 	Exp
 	ComExp
+	BindExpr
 )
 
 type Expr struct {
