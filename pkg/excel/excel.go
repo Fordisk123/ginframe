@@ -10,7 +10,6 @@ import (
 	"github.com/tidwall/gjson"
 	excelize "github.com/xuri/excelize/v2"
 	"io"
-	"regexp"
 	"strings"
 )
 
@@ -152,66 +151,58 @@ func RenderExcelStream(fileTmpStream io.ReadCloser, indexs map[string]string, re
 	return gerrors.WithStack(excelFile.Write(renderReceiveWriter))
 }
 
-var exprRe = regexp.MustCompile(`BIND\("([^"]+)"\)`)
-var imageExprRe = regexp.MustCompile(`BINDIMAGE\("([^"]+)"\)`)
-var RecordExprRe = regexp.MustCompile(`BINDData\("([^"]+)"\)`)
-var ExpExprRe = regexp.MustCompile(`BINDDataExpr\("([^"]+)"\)`)
-var ComExpExprRe = regexp.MustCompile(`BINDDataComExpr\("([^"]+)","([^"]+)"\)`)
+type ExprTypeStr string
+
+const (
+	Bind                  ExprTypeStr = "BIND"
+	BindImage             ExprTypeStr = "BINDIMAGE"
+	BindDataExpr          ExprTypeStr = "BINDDataExpr"
+	BindExpr              ExprTypeStr = "BINDExpr"
+	BINDCollectValuesExpr ExprTypeStr = "BINDCollectValuesExpr"
+)
 
 // GetExpr 查找匹配
 func GetExpr(expr string) Expr {
-	s := exprRe.FindStringSubmatch(expr)
-	if s == nil || len(s) < 2 {
-		ss := imageExprRe.FindStringSubmatch(expr)
-		if ss == nil || len(ss) < 2 {
-			sss := RecordExprRe.FindStringSubmatch(expr)
-			if sss == nil || len(sss) < 2 {
-				ssss := ExpExprRe.FindStringSubmatch(expr)
-				if ssss == nil || len(ssss) < 2 {
-
-					info := ExtractFunctionInfo(expr)
-					if info == nil {
-						return Expr{
-							Type:  Unknown,
-							Value: "",
-						}
-					}
-
-					switch info.Name {
-					case "BINDCollectValuesExpr":
-						return Expr{
-							Type:  ComExp,
-							Value: info.Params[0],
-							Args:  info.Params[1:],
-						}
-					case "BINDExpr":
-						return Expr{
-							Type:  BindExpr,
-							Value: info.Params[0],
-							Args:  info.Params[1:],
-						}
-					}
-
-				}
-				return Expr{
-					Type:  Exp,
-					Value: ssss[1],
-				}
-			}
-			return Expr{
-				Type:  Record,
-				Value: sss[1],
-			}
+	info := ExtractFunctionInfo(expr)
+	if info == nil {
+		return Expr{
+			Type:  Unknown,
+			Value: "",
 		}
+	}
+	switch info.Name {
+	case string(Bind):
+		return Expr{
+			Type:  Str,
+			Value: info.Params[0]}
+	case string(BindImage):
 		return Expr{
 			Type:  Img,
-			Value: ss[1],
+			Value: info.Params[0]}
+	case string(BindDataExpr):
+		return Expr{
+			Type:  Record,
+			Value: info.Params[0],
+		}
+	case string(BindExpr):
+		return Expr{
+			Type:  Exp,
+			Value: info.Params[0],
+			Args:  info.Params[1:],
+		}
+	case string(BINDCollectValuesExpr):
+		return Expr{
+			Type:  CollectDataExp,
+			Value: info.Params[0],
+			Args:  info.Params[1:],
+		}
+	default:
+		return Expr{
+			Type:  Unknown,
+			Value: "",
 		}
 	}
-	return Expr{
-		Type:  Str,
-		Value: s[1],
-	}
+
 }
 
 // JsonLookUp 获取json对应字段内容
@@ -254,8 +245,7 @@ const (
 	Img
 	Record
 	Exp
-	ComExp
-	BindExpr
+	CollectDataExp
 )
 
 type Expr struct {
