@@ -7,6 +7,7 @@ import (
 	"github.com/ory/viper"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
+	"gorm.io/gorm/clause"
 	gormLogger "gorm.io/gorm/logger"
 	"log"
 	"strings"
@@ -16,7 +17,7 @@ import (
 var db *gorm.DB
 
 func GetDb(ctx context.Context) *gorm.DB {
-	return db.WithContext(ctx)
+	return db.Clauses(clause.Locking{Strength: "UPDATE"}).WithContext(ctx)
 }
 
 func InitDb() {
