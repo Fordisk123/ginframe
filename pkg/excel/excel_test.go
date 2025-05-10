@@ -76,7 +76,7 @@ func TestGetExprValue(t *testing.T) {
 //}
 
 func TestGetExprValue2(t *testing.T) {
-	s := "BINDCollectValuesExpr(\"experimentData.#(TorqueType==低扭矩)#|#(LoadDirection==顺时针)#.CollectValues\",\"5\")"
+	s := "BINDCollectValuesExpr(\"experimentData.#(TorqueType==低扭矩)#|#(LoadDirection==顺时针)#.CollectValues|0\",\"5\",\"index\")"
 	expr := GetExpr(s)
 	println(fmt.Sprintf("%+v", expr))
 
