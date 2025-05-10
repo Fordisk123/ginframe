@@ -159,6 +159,7 @@ const (
 	BindDataExpr          ExprTypeStr = "BINDDataExpr"
 	BindExpr              ExprTypeStr = "BINDExpr"
 	BINDCollectValuesExpr ExprTypeStr = "BINDCollectValuesExpr"
+	BINDRepeat            ExprTypeStr = "BINDRepeat"
 )
 
 // GetExpr 查找匹配
@@ -193,6 +194,12 @@ func GetExpr(expr string) Expr {
 	case string(BINDCollectValuesExpr):
 		return Expr{
 			Type:  CollectValuesDataExpr,
+			Value: info.Params[0],
+			Args:  info.Params[1:],
+		}
+	case string(BINDRepeat):
+		return Expr{
+			Type:  RepeatExpr,
 			Value: info.Params[0],
 			Args:  info.Params[1:],
 		}
@@ -246,6 +253,7 @@ const (
 	DataExpr
 	ExprExpr
 	CollectValuesDataExpr
+	RepeatExpr
 )
 
 type Expr struct {
