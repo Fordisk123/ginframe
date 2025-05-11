@@ -175,15 +175,20 @@ func GetExpr(expr string) Expr {
 	case string(Bind):
 		return Expr{
 			Type:  Str,
-			Value: info.Params[0]}
+			Value: info.Params[0],
+			Args:  info.Params[1:],
+		}
 	case string(BindImage):
 		return Expr{
 			Type:  Img,
-			Value: info.Params[0]}
+			Value: info.Params[0],
+			Args:  info.Params[1:],
+		}
 	case string(BindDataExpr):
 		return Expr{
 			Type:  DataExpr,
 			Value: info.Params[0],
+			Args:  info.Params[1:],
 		}
 	case string(BindExpr):
 		return Expr{
