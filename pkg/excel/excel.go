@@ -160,6 +160,7 @@ const (
 	BindExpr              ExprTypeStr = "BINDExpr"
 	BINDCollectValuesExpr ExprTypeStr = "BINDCollectValuesExpr"
 	BINDRepeat            ExprTypeStr = "BINDRepeat"
+	BINDIndex             ExprTypeStr = "BINDIndex"
 )
 
 // GetExpr 查找匹配
@@ -175,6 +176,12 @@ func GetExpr(expr string) Expr {
 	case string(Bind):
 		return Expr{
 			Type:  Str,
+			Value: info.Params[0],
+			Args:  info.Params[1:],
+		}
+	case string(BINDIndex):
+		return Expr{
+			Type:  Index,
 			Value: info.Params[0],
 			Args:  info.Params[1:],
 		}
@@ -259,6 +266,7 @@ const (
 	ExprExpr
 	CollectValuesDataExpr
 	RepeatExpr
+	Index
 )
 
 type Expr struct {
