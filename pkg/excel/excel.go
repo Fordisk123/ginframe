@@ -162,6 +162,7 @@ const (
 	BINDRepeat            ExprTypeStr = "BINDRepeat"
 	BINDIndex             ExprTypeStr = "BINDIndex"
 	BINDRepeatColExpr     ExprTypeStr = "BINDRepeatColExpr"
+	BINDRepeatExpr        ExprTypeStr = "BINDRepeatExpr"
 )
 
 // GetExpr 查找匹配
@@ -223,6 +224,12 @@ func GetExpr(expr string) Expr {
 			Args:  info.Params[1:],
 		}
 
+	case string(BINDRepeatExpr):
+		return Expr{
+			Type:  RepeatDataExpr,
+			Value: info.Params[0],
+			Args:  info.Params[1:],
+		}
 	default:
 		return Expr{
 			Type:  Unknown,
@@ -276,6 +283,7 @@ const (
 	RepeatExpr
 	Index
 	RepeatColExpr
+	RepeatDataExpr
 )
 
 type Expr struct {
