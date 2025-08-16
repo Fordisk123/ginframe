@@ -3,14 +3,16 @@ package excel
 import (
 	"context"
 	"fmt"
+	"io"
+	"strconv"
+	"strings"
+
 	"github.com/Fordisk123/ginframe/db"
 	"github.com/Fordisk123/ginframe/log"
 	"github.com/Fordisk123/ginframe/pkg/file"
 	gerrors "github.com/pkg/errors"
 	"github.com/tidwall/gjson"
 	excelize "github.com/xuri/excelize/v2"
-	"io"
-	"strings"
 )
 
 const TemplatePrefixFieldName = "$_$_"
@@ -163,6 +165,7 @@ const (
 	BINDIndex             ExprTypeStr = "BINDIndex"
 	BINDRepeatColExpr     ExprTypeStr = "BINDRepeatColExpr"
 	BINDRepeatExpr        ExprTypeStr = "BINDRepeatExpr"
+	BindFloat             ExprTypeStr = "BINDFloat"
 )
 
 // GetExpr 查找匹配
@@ -190,6 +193,12 @@ func GetExpr(expr string) Expr {
 	case string(BindImage):
 		return Expr{
 			Type:  Img,
+			Value: info.Params[0],
+			Args:  info.Params[1:],
+		}
+	case string(BindFloat):
+		return Expr{
+			Type:  Float,
 			Value: info.Params[0],
 			Args:  info.Params[1:],
 		}
@@ -266,6 +275,21 @@ func JsonLookUp(ctx context.Context, jsonData string, expr Expr, file file.File)
 			return "", err
 		}
 		return download, nil
+	case Float:
+		raw := gjson.Get(jsonData, expr.Value).Raw
+		if strings.HasPrefix(raw, "\"") {
+			raw = raw[1:]
+		}
+		// 去掉结尾的双引号
+		if strings.HasSuffix(raw, "\"") {
+			raw = raw[:len(raw)-1]
+		}
+		f, err := strconv.ParseFloat(raw, 64)
+		if err != nil {
+			fmt.Println("转换错误:", err)
+			return nil, fmt.Errorf("unsupported float type %v", raw)
+		}
+		return f, nil
 	default:
 		return nil, fmt.Errorf("unsupported type %v", expr.Type)
 	}
@@ -284,6 +308,7 @@ const (
 	Index
 	RepeatColExpr
 	RepeatDataExpr
+	Float
 )
 
 type Expr struct {
