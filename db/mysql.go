@@ -22,7 +22,7 @@ func GetDb(ctx context.Context) *gorm.DB {
 	if scope == "true" {
 		return db.Scopes().WithContext(ctx)
 	} else {
-		return db.Unscoped().WithContext(ctx)
+		return db.WithContext(ctx)
 	}
 }
 
