@@ -3,20 +3,27 @@ package db
 import (
 	"context"
 	"fmt"
+	"log"
+	"os"
+	"strings"
+	"time"
+
 	flog "github.com/Fordisk123/ginframe/log"
 	"github.com/ory/viper"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 	gormLogger "gorm.io/gorm/logger"
-	"log"
-	"strings"
-	"time"
 )
 
 var db *gorm.DB
 
 func GetDb(ctx context.Context) *gorm.DB {
-	return db.WithContext(ctx)
+	scope := os.Getenv("scope")
+	if scope == "true" {
+		return db.Scopes().WithContext(ctx)
+	} else {
+		return db.Unscoped().WithContext(ctx)
+	}
 }
 
 func InitDb() {
