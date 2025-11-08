@@ -213,7 +213,7 @@ func GetExpr(expr string) Expr {
 		}
 	case string(BindFloatDataExpr):
 		return Expr{
-			Type:  DataFloatDataExpr,
+			Type:  DataFloatExpr,
 			Value: info.Params[0],
 			Args:  info.Params[1:],
 		}
@@ -323,7 +323,7 @@ const (
 	Str     ExprType = iota
 	Img
 	DataExpr
-	DataFloatDataExpr
+	DataFloatExpr
 	ExprExpr
 	CollectValuesDataExpr
 	InCollectValuesDataExpr
