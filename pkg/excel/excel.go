@@ -159,6 +159,7 @@ const (
 	Bind                               ExprTypeStr = "BIND"
 	BindImage                          ExprTypeStr = "BINDIMAGE"
 	BindDataExpr                       ExprTypeStr = "BINDDataExpr"
+	BindFloatDataExpr                  ExprTypeStr = "BINDFloatDataExpr"
 	BindExpr                           ExprTypeStr = "BINDExpr"
 	BINDCollectValuesExpr              ExprTypeStr = "BINDCollectValuesExpr"
 	BINDInCollectValueExprExprTypeStr  ExprTypeStr = "BINDInCollectValuesExpr"
@@ -207,6 +208,12 @@ func GetExpr(expr string) Expr {
 	case string(BindDataExpr):
 		return Expr{
 			Type:  DataExpr,
+			Value: info.Params[0],
+			Args:  info.Params[1:],
+		}
+	case string(BindFloatDataExpr):
+		return Expr{
+			Type:  DataFloatDataExpr,
 			Value: info.Params[0],
 			Args:  info.Params[1:],
 		}
@@ -316,6 +323,7 @@ const (
 	Str     ExprType = iota
 	Img
 	DataExpr
+	DataFloatDataExpr
 	ExprExpr
 	CollectValuesDataExpr
 	InCollectValuesDataExpr
