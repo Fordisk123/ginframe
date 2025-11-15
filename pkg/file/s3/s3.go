@@ -3,14 +3,15 @@ package s3
 import (
 	"context"
 	"fmt"
+	"io"
+	"log/slog"
+	"strings"
+
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/credentials"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/s3"
 	gerrors "github.com/pkg/errors"
-	"io"
-	"log/slog"
-	"strings"
 )
 
 type S3Client struct {
@@ -55,7 +56,7 @@ func splitBucketNameAndFileName(fullPathFileName string) (string, string) {
 	slog.Default().Info(fmt.Sprintf("fullPathFileName: %s", fullPathFileName))
 	index := strings.Index(fullPathFileName, "/")
 	secondIndex := strings.Index(fullPathFileName[index+1:], "/")
-	return fullPathFileName[1 : secondIndex+1], fullPathFileName[secondIndex+1:]
+	return fullPathFileName[1 : secondIndex+1], fullPathFileName[secondIndex+2:]
 }
 
 func (s *S3Client) Upload(ctx context.Context, fileName string, reader io.ReadSeekCloser) error {
