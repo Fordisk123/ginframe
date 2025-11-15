@@ -110,7 +110,7 @@ func (s *S3Client) Download(ctx context.Context, fileName string) (io.ReadCloser
 			Key:    aws.String(filename),
 		})
 		if err != nil {
-			return nil, err
+			return nil, fmt.Errorf("bucket %s key %s error is %s ", bucketName, fileName, err.Error())
 		}
 		return object.Body, nil
 	}
