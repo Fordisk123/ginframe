@@ -20,9 +20,9 @@ var db *gorm.DB
 func GetDb(ctx context.Context) *gorm.DB {
 	scope := os.Getenv("scope")
 	if scope == "true" {
-		return db.Scopes().WithContext(ctx)
-	} else {
 		return db.WithContext(ctx)
+	} else {
+		return db.WithContext(ctx).Unscoped()
 	}
 }
 
